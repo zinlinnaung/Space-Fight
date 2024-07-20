@@ -1,0 +1,61 @@
+[gd_scene load_steps=10 format=3 uid="uid://c8e3i1a28oc2a"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_etsuy"]
+[ext_resource type="Texture2D" uid="uid://b8yfpax5ymtsg" path="res://assets/textures/player_ship.png" id="1_ijv12"]
+[ext_resource type="AudioStream" uid="uid://csd0rniubvhsk" path="res://assets/audio/sfx_laser2.wav" id="3_dj2jh"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6eyc1"]
+radius = 19.0
+height = 90.0
+
+[sub_resource type="Gradient" id="Gradient_5byy0"]
+offsets = PackedFloat32Array(0, 0.434426, 1)
+colors = PackedColorArray(0.966667, 1, 0, 0, 0.980392, 0.533333, 0.054902, 1, 1, 0, 0.117647, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1pme5"]
+gradient = SubResource("Gradient_5byy0")
+
+[sub_resource type="Curve" id="Curve_v6jt7"]
+_data = [Vector2(0, 0.494505), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_n4oiw"]
+curve = SubResource("Curve_v6jt7")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8wh8x"]
+lifetime_randomness = 0.3
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(1, 15, 1)
+spread = 30.0
+initial_velocity_min = -200.0
+gravity = Vector3(0, 0, 0)
+scale_min = 10.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_n4oiw")
+color_ramp = SubResource("GradientTexture1D_1pme5")
+
+[node name="Player" type="CharacterBody2D"]
+collision_mask = 2
+motion_mode = 1
+script = ExtResource("1_etsuy")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_ijv12")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(5, 0)
+shape = SubResource("CapsuleShape2D_6eyc1")
+
+[node name="RocketContainer" type="Node" parent="."]
+
+[node name="RocketShotSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_dj2jh")
+
+[node name="FlameParticleEffect" type="GPUParticles2D" parent="."]
+position = Vector2(-27, -1)
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_8wh8x")
+lifetime = 0.3
